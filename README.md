@@ -60,14 +60,14 @@ Top-level layout (workspace root and main project folder):
     - Resources.resx
     - Settings.settings
   - bin/, obj/
-- packages/ (local NuGet packages used by the project)
+- E_Shift_V02/packages.config (NuGet dependency manifest; packages are restored locally)
 
 Note: The exact file listing may include designer and resource files (`*.Designer.cs`, `*.resx`) for each WinForms form.
 
 ## Requirements
 - Windows with Visual Studio (2019/2022 recommended) with .NET desktop development workload
 - Microsoft SQL Server (or SQL Server Express)
-- Restore NuGet packages (solution uses packages in `packages/` and may reference online packages)
+- Restore NuGet packages from the project manifest; the local package cache is not tracked.
 
 ## Setup & Run (Developer)
 
@@ -102,3 +102,38 @@ Example `App.config` connection string entry (update with your server/name/passw
 ## Testing
 - Manual testing of user flows (Admin & Customer) is expected since this is a WinForms app.
 - Verify: registration, login, job creation, job updates, PDF export, and email notifications.
+## Email Configuration
+
+Email notifications read the Gmail app password from the `ESHIFT_SMTP_APP_PASSWORD` Windows user environment variable. Set this variable locally before starting the application; never add its value to source files or commit it. Revoke any previously exposed app password and create a new one if email notifications are still needed.
+
+## Uploading to GitHub
+Initialize and push the repository to GitHub with these commands (run from repository root):
+
+```bash
+git init
+git add .
+git commit -m "Initial commit: E_Shift_V02 transport management app"
+# Create a remote repo on GitHub (via web or gh CLI) and then:
+git remote add origin <your-repo-url>
+git branch -M main
+git push -u origin main
+```
+
+## Contributing
+- Use feature branches and PRs for changes.
+- Keep secrets out of source control (remove credentials from `App.config` before committing).
+
+## Troubleshooting
+- Build errors: ensure the targeted .NET framework/SDK in the project matches your installed SDKs and that NuGet packages are restored.
+- Database errors: confirm connection string and that required tables exist.
+
+## Contacts
+For questions or help setting up the database/schema, contact the project owner or maintainer.
+
+---
+
+README generated and tailored to the workspace contents. If you want, I can:
+
+- Add example SQL schema/migration scripts inferred from `Models/`.
+- Create a simple data-seed script and a `.gitignore` for Visual Studio.
+- Run a build in this environment and report errors.
