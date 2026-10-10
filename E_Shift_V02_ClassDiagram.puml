@@ -1,0 +1,304 @@
+@startuml
+left to right direction
+' e-Shift System Class Diagram
+
+' =========================
+' Entity: Customer
+class Customer {
+  +int CustomerID
+  +string Title
+  +string FirstName
+  +string LastName
+  +string Gender
+  +string Address
+  +string PhoneNumber
+  +string Email
+  +string NIC
+  +string Username
+  +string PasswordHash
+  +byte[] ProfilePhoto
+  +DateTime RegisterDate
+  +bool IsActive
+}
+
+' Entity: Admin
+class Admin {
+  +int AdminID
+  +string Title
+  +string FirstName
+  +string LastName
+  +string NIC
+  +string Username
+  +string PasswordHash
+  +string Email
+  +string PhoneNumber
+  +string Address
+  +string ProfilePicturePath
+  +bool IsActive
+}
+
+' Entity: Driver
+class Driver {
+  +int DriverID
+  +string Title
+  +string FirstName
+  +string LastName
+  +string Gender
+  +DateTime DateOfBirth
+  +string Address
+  +string PhoneNumber
+  +string Email
+  +string NIC
+  +string LicenseNumber
+  +DateTime LicenseExpiryDate
+  +DateTime RegisterDate
+  +byte[] ProfilePhoto
+  +bool IsActive
+}
+
+' Entity: Assistant
+class Assistant {
+  +int AssistantID
+  +string Title
+  +string FirstName
+  +string LastName
+  +string Gender
+  +DateTime DateOfBirth
+  +string Address
+  +string PhoneNumber
+  +string Email
+  +string NIC
+  +DateTime RegisterDate
+  +byte[] ProfilePhoto
+  +bool IsActive
+}
+
+' Entity: Lorry
+class Lorry {
+  +int LorryID
+  +string PlateNumber
+  +string Manufacturer
+  +string Colour
+  +string FuelType
+  +DateTime RegisterDate
+  +byte[] VehiclePhoto
+  +bool IsActive
+}
+
+' Entity: Container
+class Container {
+  +int ContainerID
+  +string PlateNumber
+  +string Manufacturer
+  +string Colour
+  +decimal TarWeight
+  +decimal MaxWeight
+  +decimal Length
+  +decimal Width
+  +decimal Height
+  +DateTime RegisterDate
+  +byte[] ContainerPhoto
+  +bool IsActive
+}
+
+' Entity: ProductType
+class ProductType {
+  +int ProductTypeID
+  +string ProductName
+}
+
+' Entity: PickUpCity
+class PickUpCity {
+  +int PickUpCityID
+  +string CityName
+}
+
+' Entity: DeliveryCity
+class DeliveryCity {
+  +int DeliveryCityID
+  +string CityName
+}
+
+' Entity: LocationType
+class LocationType {
+  +int LocationTypeID
+  +string TypeName
+}
+
+' Entity: Job
+class Job {
+  +int JobID
+  +int CustomerID
+  +int? LorryID
+  +int? DriverID
+  +int? AssistantID
+  +int? ContainerID
+  +string FirstProduct
+  +int FirstProductQuantity
+  +string SecondProduct
+  +int SecondProductQuantity
+  +string FirstName
+  +string LastName
+  +string PhoneNumber
+  +string Email
+  +string PickupAddress
+  +string PickupCity
+  +string DeliveryAddress
+  +string DeliveryCity
+  +string LocationType
+  +DateTime PickupDate
+  +decimal TotalDistance
+  +string EstimatedTime
+  +decimal JobCostPerDistance
+  +decimal TotalCost
+  +string Status
+  +DateTime CreatedDate
+  +string LoadStatus
+}
+
+' Entity: CustomerJobRequest
+class CustomerJobRequest {
+  +int JobID
+  +int CustomerID
+  +string PickupAddress
+  +string PickupCity
+  +string DeliveryAddress
+  +string DeliveryCity
+  +string LocationType
+  +DateTime PickupDate
+  +string Status
+  +string LoadStatus
+  +DateTime CreatedDate
+}
+
+' Entity: Load
+class Load {
+  +int LoadID
+  +int JobID
+  +int CustomerID
+  +int LorryID
+  +int DriverID
+  +int AssistantID
+  +int ContainerID
+  +string LoadStatus
+}
+
+' Entity: JobRejection
+class JobRejection {
+  +int RejectionID
+  +int JobID
+  +int AdminID
+  +string Reason
+  +DateTime RejectionDate
+}
+
+' Entity: Invoice
+class Invoice {
+  +int InvoiceID
+  +int JobID
+  +DateTime InvoiceDate
+  +decimal Amount
+  +decimal PaidAmount
+  +string PaymentStatus
+}
+
+' Entity: CustomerMailingLog
+class CustomerMailingLog {
+  +int MailID
+  +int? SentByAdminID
+  +int SentToCustomerID
+  +string CustomerFirstName
+  +string CustomerLastName
+  +string Subject
+  +string Body
+  +DateTime SentDate
+}
+
+' Entity: DriverMailingLog
+class DriverMailingLog {
+  +int MailID
+  +int? SentByAdminID
+  +int SentToDriverID
+  +string DriverFirstName
+  +string DriverLastName
+  +string Subject
+  +string Body
+  +DateTime SentDate
+}
+
+' Entity: AssistantMailingLog
+class AssistantMailingLog {
+  +int MailID
+  +int? SentByAdminID
+  +int SentToAssistantID
+  +string AssistantFirstName
+  +string AssistantLastName
+  +string Subject
+  +string Body
+  +DateTime SentDate
+}
+
+' Entity: SettingsLog
+class SettingsLog {
+  +int LogID
+  +string UserType
+  +int UserID
+  +string Action
+  +DateTime ActionDate
+}
+
+' Entity: JobStatusHistory
+class JobStatusHistory {
+  +int StatusHistoryID
+  +int JobID
+  +string Status
+  +string ChangedByUserType
+  +int ChangedByUserID
+  +DateTime ChangeDate
+}
+
+' Entity: UserAuditLog
+class UserAuditLog {
+  +int AuditLogID
+  +string UserType
+  +int UserID
+  +string Action
+  +DateTime ActionDate
+}
+
+' Entity: RoleSelection
+class RoleSelection {
+  +int RoleID
+  +string RoleName
+}
+
+' =========================
+' Relationships
+Customer "1" --> "*" Job : places
+Customer "1" --> "*" CustomerJobRequest : requests
+Customer "1" --> "*" Load : owns
+Customer "1" --> "*" CustomerMailingLog : receives
+Customer "1" --> "*" UserAuditLog : logs
+Customer "1" --> "*" SettingsLog : settings
+Admin "1" --> "*" JobRejection : rejects
+Admin "1" --> "*" CustomerMailingLog : sends
+Admin "1" --> "*" DriverMailingLog : sends
+Admin "1" --> "*" AssistantMailingLog : sends
+Admin "1" --> "*" UserAuditLog : logs
+Admin "1" --> "*" SettingsLog : settings
+Job "1" --> "*" Load : contains
+Job "1" --> "*" JobStatusHistory : status
+Job "1" --> "1" Invoice : invoice
+Job "1" --> "*" JobRejection : rejections
+Job "1" --> "*" CustomerJobRequest : requests
+Job "*" --> "1" Lorry : uses
+Job "*" --> "1" Driver : assigned
+Job "*" --> "1" Assistant : assigned
+Job "*" --> "1" Container : uses
+Load "*" --> "1" Lorry : uses
+Load "*" --> "1" Driver : assigned
+Load "*" --> "1" Assistant : assigned
+Load "*" --> "1" Container : uses
+RoleSelection "1" --> "*" Customer : role
+RoleSelection "1" --> "*" Admin : role
+@enduml

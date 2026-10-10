@@ -1,0 +1,108 @@
+@startuml
+left to right direction
+skinparam rectangle {
+  BackgroundColor #F9F9F9
+  BorderColor #333
+}
+
+actor Customer
+actor Admin
+actor Driver
+actor Assistant
+
+package "UI Layer" {
+  rectangle "Customer Dashboard" as CustomerUI
+  rectangle "Admin Dashboard" as AdminUI
+  rectangle "Driver Dashboard" as DriverUI
+  rectangle "Assistant Dashboard" as AssistantUI
+}
+
+package "Application/Service Layer" {
+  rectangle "Job Service" as JobService
+  rectangle "User Service" as UserService
+  rectangle "Load Service" as LoadService
+  rectangle "Mailing Service" as MailingService
+  rectangle "Invoice Service" as InvoiceService
+  rectangle "Audit Service" as AuditService
+}
+
+package "Domain/Business Layer" {
+  rectangle "Job" as JobEntity
+  rectangle "Load" as LoadEntity
+  rectangle "Customer" as CustomerEntity
+  rectangle "Admin" as AdminEntity
+  rectangle "Driver" as DriverEntity
+  rectangle "Assistant" as AssistantEntity
+  rectangle "Lorry" as LorryEntity
+  rectangle "Container" as ContainerEntity
+  rectangle "Invoice" as InvoiceEntity
+  rectangle "JobRejection" as JobRejectionEntity
+  rectangle "MailingLog" as MailingLogEntity
+  rectangle "SettingsLog" as SettingsLogEntity
+  rectangle "JobStatusHistory" as JobStatusHistoryEntity
+  rectangle "UserAuditLog" as UserAuditLogEntity
+  rectangle "RoleSelection" as RoleSelectionEntity
+}
+
+package "Data Access Layer" {
+  rectangle "Repositories/DAOs" as Repos
+}
+
+database "ESHIFT Database" as DB
+
+' Actors to UI
+Customer --> CustomerUI
+Admin --> AdminUI
+Driver --> DriverUI
+Assistant --> AssistantUI
+
+' UI to Application/Service Layer
+CustomerUI --> UserService : Login/Register
+CustomerUI --> JobService : Create/View Jobs
+AdminUI --> UserService : Login
+AdminUI --> JobService : Approve/Assign Jobs
+AdminUI --> MailingService : Send Mails
+DriverUI --> LoadService : View/Update Loads
+AssistantUI --> LoadService : View/Update Loads
+
+
+' Application/Service Layer to Domain/Business Layer
+UserService --> CustomerEntity
+UserService --> AdminEntity
+UserService --> DriverEntity
+UserService --> AssistantEntity
+JobService --> JobEntity
+JobService --> LoadEntity
+JobService --> LorryEntity
+JobService --> ContainerEntity
+JobService --> JobRejectionEntity
+JobService --> JobStatusHistoryEntity
+JobService --> InvoiceEntity
+LoadService --> LoadEntity
+MailingService --> MailingLogEntity
+InvoiceService --> InvoiceEntity
+AuditService --> UserAuditLogEntity
+AuditService --> SettingsLogEntity
+
+
+' Domain/Business Layer to Data Access Layer
+CustomerEntity --> Repos
+AdminEntity --> Repos
+DriverEntity --> Repos
+AssistantEntity --> Repos
+JobEntity --> Repos
+LoadEntity --> Repos
+LorryEntity --> Repos
+ContainerEntity --> Repos
+InvoiceEntity --> Repos
+JobRejectionEntity --> Repos
+MailingLogEntity --> Repos
+SettingsLogEntity --> Repos
+JobStatusHistoryEntity --> Repos
+UserAuditLogEntity --> Repos
+RoleSelectionEntity --> Repos
+
+' Data Access Layer to Database
+Repos --> DB
+
+@enduml
